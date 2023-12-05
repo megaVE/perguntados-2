@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import parse from 'html-react-parser'
+import './question.css'
 
 // Database
 
@@ -53,21 +54,23 @@ const Question = ({category}) => {
         setTimeout(() => {
             createQuestion(computer)
             setConfirmedAnswer(false)
+            setCurrentAnswer(null)
         }, 1500)
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>{question ? parse(question.title) : "Loading..."}</h2>
+        <form onSubmit={handleSubmit} className="bg">
+            <h2 className="pergunta">{question ? parse(question.title) : "Loading..."}</h2>
             {question?.answers && (
-                <div>
+                <div className="centerQuestions">
                     {question.answers.map((answer, index) => (
                         <input key={index} type="submit"
-                            value={parse(answer)}
+                            value={parse(answer)} 
+                            className={(currentAnswer !== null && currentAnswer === answer) ? (currentAnswer === parse(question.correct) ? "correct" : "wrong") : "buttons"}
                             onClick={(e) => {setCurrentAnswer(e.target.value)}}
                             disabled={confirmedAnswer}
                         />))}
-                    {confirmedAnswer && <p>{(currentAnswer === parse(question.correct)) ? "Correct" : "Incorrect"} answer!</p>}
+                    {confirmedAnswer && <p className="imgpopup">{(currentAnswer === parse(question.correct)) ? "Correct" : "Incorrect"} answer!</p>}
                 </div>)}
         </form>
     )
