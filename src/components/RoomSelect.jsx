@@ -8,6 +8,8 @@ const MIN_ROOM_LENGTH = 4
 const MAX_ROOM_LENGTH = 30
 
 const RoomSelect = ({user}) => {
+    const{createUser} = useFirebaseContext()
+
     // Checks if the user has logged in
     const navigate = useNavigate()
     // useEffect(() => {
@@ -17,6 +19,27 @@ const RoomSelect = ({user}) => {
     //         navigate("/")
     //     }
     // }, [])
+
+    // Checks if the user closes the tab
+    useEffect(() => {
+        const handleBeforeUnload = (e) => { e.preventDefault() }
+        
+        const handleUnload = async (e) => {
+            const message = "o/";
+            (e || window).returnValue = message; //Gecko + IE
+            return message;
+            // e.preventDefault()
+            // await createUser("caralho", 9)
+        }
+
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        window.addEventListener('unload', handleUnload)
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+            window.removeEventListener('unload', handleUnload)
+        }
+    }, [])
             
     const{createRoom, getRooms} = useFirebaseContext()
 
@@ -90,7 +113,7 @@ const RoomSelect = ({user}) => {
             <div>
                 {rooms?.map((room, index) => (
                     <React.Fragment key={index}>
-                        {Object.keys(room.guest).length === 0 && <div style={{backgroundColor: "#fff"}}>
+                        {room.guest.name === "" && <div style={{backgroundColor: "#fff"}}>
                             <h3>{room.name}{room.password.length > 0 && (<span className="lnr lnr-lock"></span>)}</h3>
                             <div style={{display: "flex", alignItems: "center"}}>
                                 <p>Hosted by:</p>

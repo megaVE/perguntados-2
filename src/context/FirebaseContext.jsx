@@ -1,7 +1,7 @@
 import { createContext } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { collection, addDoc, getDocs, deleteDoc } from "firebase/firestore"
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import { db } from "../firebase/firebase-config"
 
 export const FirebaseContext = createContext()
@@ -20,15 +20,12 @@ export const FirebaseContextProvider = ({children}) => {
         return refinedData
     }
 
-    const deleteOperation = async (reference, property, id) => {
-        const table = readOperation(reference)
-        
-        const deletedElement = table.filter(element => element[property] === id)
-        
-        const data = doc(db, reference, deletedElement)
-
-        await deleteDoc(data)
+    const updateOperation = async (reference, data, id) => {
+        const updateDoc = doc(db, reference, id)
+        await updateDoc(updateDoc, data)
     }
+
+    const deleteOperation = async (reference, id) => { await deleteDoc(doc(db, reference, id)) }
 
     // Users Table
     const getUsers = async () => {
@@ -47,7 +44,7 @@ export const FirebaseContextProvider = ({children}) => {
             const existentNames = existentUsers.reduce((acc, user) => [...acc, user.name], [])
             if(existentNames.includes(name)) return alert("Login attempt error! Username already taken")
 
-            // createOperation("users", {name, avatar})
+            createOperation("users", {name, avatar})
             
             alert(`Login Success with ${name}!`)
             navigate('/play')
@@ -59,6 +56,12 @@ export const FirebaseContextProvider = ({children}) => {
 
     const deleteUser = async (name) => {
         console.log("deleteUser: ", name)
+        const users = await getUsers()
+        const deletedUser = users.filter(element => element.name === name)
+
+        if(deletedUser.lenght === 0) return
+
+        deleteOperation("users", deletedUser.id)
     }
 
     // Rooms Table
@@ -78,7 +81,7 @@ export const FirebaseContextProvider = ({children}) => {
             const existentNames = existentRooms.reduce((acc, room) => [...acc, room.name], [])
             if(existentNames.includes(name)) return alert("Room creation attempt error! Room name already taken")
 
-            // createOperation("rooms", {name, owner, password, guest: {}, date: new Date()})
+            // createOperation("rooms", {name, owner, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
             
             alert("Room created successfully!")
             navigate(`/play/${name}`)
@@ -89,7 +92,26 @@ export const FirebaseContextProvider = ({children}) => {
     }
 
     const deleteRoom = async (name) => {
-    
+        console.log("deleteRoom: ", name)
+        const rooms = await getRooms()
+        const deletedRoom = rooms.filter(element => element.name === name)
+
+        if(users.lenght === 0) return
+
+        deleteOperation("rooms", deletedRoom.id)
+    }
+
+    const joinRoom = async (roomName, userName, userAvatar) => {
+        const rooms = await getRooms()
+        const joinedRoom = rooms.filter(element => element.name === roomName)
+
+        if(joinedRoom.lenght === 0) return alert("Error joining room! Please try again later")
+        if(joinedRoom.guest.name !== "") return alert("Error joining room! The room is already full")
+
+        const guest = {name: userName, avatar: userAvatar, ready: false}
+        const updatedJoinedRoom = {...joinedRoom, guest}
+
+        updateOperation("rooms", updatedJoinedRoom, updatedJoinedRoom.id)        
     }
 
     // Match
@@ -97,8 +119,8 @@ export const FirebaseContextProvider = ({children}) => {
         try{
             const rooms = await getRooms()
             const currentRoom = rooms.filter(element => element.name === room)
-    
-            return currentRoom[0]
+            
+            return (currentRoom.lenght > 0) ? currentRoom[0] : alert("Room loading error! Please try again later!")
         } catch(error){
             console.log(error)
             return alert("Room loading error! Please try again later")
@@ -106,7 +128,10 @@ export const FirebaseContextProvider = ({children}) => {
     }
 
     return(
-        <FirebaseContext.Provider value={{createUser, getUsers, createRoom, getRooms, getMatch}}>
+        <FirebaseContext.Provider value={
+            {createUser, getUsers, deleteUser,
+            createRoom, getRooms, deleteRoom,
+            joinRoom, getMatch}}>
             {children}
         </FirebaseContext.Provider>
     )
