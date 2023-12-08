@@ -1,4 +1,5 @@
 import { useState } from "react"
+import styles from "./Login.module.css"
 
 import { useFirebaseContext } from "../hooks/useFirebaseContext"
 
@@ -27,27 +28,27 @@ const Login = ({setUser}) => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="name">User Name: </label>
-                    <input type="text" name="name" id="name"
+                <div className={styles.nickname}>
+                    <label htmlFor="name">Choose your nickname: </label>
+                    <input className={styles.nick} type="text" name="name" id="name"
                         value={name}
                         onChange={(e) => {setName(e.target.value)}}
                     />
                 </div>
 
-                <div>
-                    <label>Avatar:</label>
+                <div className={styles.avatar}>
+                    <label>Select your avatar:</label>
+                    {/* <div style={{display: "flex", boxSizing: "border-box", alignItems: "center"}}> */}
                     <div style={{display: "flex", boxSizing: "border-box", alignItems: "center"}}>
                         {avatarArray.map((image, index) => (
                             <img key={index} src={image} alt={`avatar-${index + 1}`}
-                                style={{margin: "0 10px", width: "50px", height: "50px", border: index == avatar ? "5px solid #000" : "5px solid transparent"}}
+                                style={{transition: "0.2s", margin: "0 0.7vw", borderRadius: "5vw", width: "8vw", height: "8vw", border: index == avatar ? "0.4vw solid #000" : "0.4vw solid transparent"}}
                                 onClick={(e) => {setAvatar(index)}}
                             />
                         ))}
                     </div>
                 </div>
-
-                <input type="submit" value="Play"/>
+                <input type="submit" value="Play" className={styles.botao}/>
             </form>
         </div>
     )

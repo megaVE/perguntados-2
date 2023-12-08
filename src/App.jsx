@@ -14,7 +14,7 @@ function App() {
     const[user, setUser] = useState(null)
 
     return (<>
-        <h1>Não é o Perguntados</h1>
+        <h1 className='title'>Não é o Perguntados</h1>
         <BrowserRouter>
             <FirebaseContextProvider>
                 <Routes>

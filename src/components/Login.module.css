@@ -1,0 +1,85 @@
+.nickname {
+    margin-top: 7vh;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-left: 25%;
+    margin-right: 25%;
+    height: 20vh;
+    align-items: center;
+    text-align: center;
+    border-radius: 50vw;
+    display: flex;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+}
+
+.avatar {
+    justify-content: center;
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-top: 7vh;
+    margin-left: 17%;
+    margin-right: 17%;
+    height: 20vh;
+    align-items: center;
+    text-align: center;
+    border-radius: 2vw;
+    display: flex;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+}
+
+.nick {
+    padding: 6px 12px;
+    margin-left: 2%;
+    width: 20vw;
+    height: 4vh;
+    font-size: 60%;
+    font-weight: 400;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.5vw;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    :focus{
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+}
+
+.botao {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 50vw;
+    display: flex;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 2vw;
+    width: 20vw;
+    height: 10vh;
+    border: 0;
+    margin-top: 10vh;
+    transition: 0.3s
+}
+
+.botao:hover {
+    box-shadow: 0 10px 7px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
