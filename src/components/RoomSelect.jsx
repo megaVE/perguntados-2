@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFirebaseContext } from "../hooks/useFirebaseContext"
 import { avatarArray } from "./avatarArray"
+import styles from "./RoomSelect.module.css"
 
 const MIN_ROOM_LENGTH = 4
 const MAX_ROOM_LENGTH = 30
@@ -84,10 +85,12 @@ const RoomSelect = ({user}) => {
         <div>
             <div>
                 {/* Deletes user from Database */}
-                <button onClick={() => {navigate('/')}}>Quit</button>
-                <div style={{display: "flex"}}>
-                    <img src={avatarArray[user?.avatar]} alt="avatar" style={{width: "40px", height: "40px", border: "4px solid black"}}/>
-                    <p style={{marginLeft: "10px"}}>{user?.name}</p>
+                <div className={styles.user}>
+                    <div style={{display: "flex", justifyContent: "center"}}>
+                        <img src={avatarArray[user?.avatar]} alt="avatar" className={styles.photo}/>
+                        <p style={{marginLeft: "1vw"}}>{user?.name}</p>
+                    </div>
+                    <button style={{marginLeft: "3vw"}} className={styles.button} onClick={() => {navigate('/')}}>Quit</button>
                 </div>
                 <h2>Available Rooms:</h2>
                 {isCreatingNewRoom
@@ -108,34 +111,38 @@ const RoomSelect = ({user}) => {
                     </div>
                     <input type="submit" value="Create Room"/>
                 </form>)
-                : (<button onClick={() => {setIsCreatingNewRoom(true)}}>Create New Room</button>)}
+                : (<button className={styles.createbutton} onClick={() => {setIsCreatingNewRoom(true)}}>Create New Room</button>)}
             </div>
-            <div>
+            <div className={styles.rooms}>
                 {rooms?.map((room, index) => (
                     <React.Fragment key={index}>
-                        {room.guest.name === "" && <div style={{backgroundColor: "#fff"}}>
-                            <h3>{room.name}{room.password.length > 0 && (<span className="lnr lnr-lock"></span>)}</h3>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <p>Hosted by:</p>
-                                <img src={avatarArray[room.owner.avatar]} alt={`avatar-${room.owner.name}`} style={{height: "30px", width: "30px", padding: "0 10px"}}/>
-                                <p>{room.owner.name}</p>
-                            </div>
-                            <form onSubmit={(e) => {joinRoom(e, index)}} style={{display: "flex"}}>
-                                {room.password.length > 0 && (
-                                    <div>
-                                        <label htmlFor="room-password">Password: </label>
-                                        <input type="text" name="room-password" id="room-password"
-                                            value={passwordArray[index]}
-                                            onChange={(e) => {
-                                                let copyPasswordArray = [...passwordArray]
-                                                copyPasswordArray[index] = e.target.value
-                                                setPasswordArray(copyPasswordArray)
-                                            }}
-                                        />
+                        {room.guest.name === "" && <div className={styles.room}>
+                            <div className={styles.centering}>
+                                <h3 style={{fontFamily: "'Raleway', sans-serif", fontSize: "1.25vw"}}>{room.name}{room.password.length > 0 && (<span className="lnr lnr-lock"></span>)}</h3>
+                                <div>
+                                    <p style={{fontFamily: "'Raleway', sans-serif", fontSize: "0.75vw", marginTop: "-2.2vh"}}>Hosted by:</p>
+                                    <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "-0.75vh"}}>
+                                        <img src={avatarArray[room.owner.avatar]} alt={`avatar-${room.owner.name}`} style={{height: "7vh", width: "3.5vw", borderRadius: "3vw"}}/>
+                                        <p style={{fontFamily: "'Raleway', sans-serif", fontSize: "1.3vw", marginLeft: "0.6vw"}}>{room.owner.name}</p>
                                     </div>
-                                )}
-                                <input type="submit" value="Join"/>
-                            </form>
+                                </div>
+                                <form onSubmit={(e) => {joinRoom(e, index)}}>
+                                    {room.password.length > 0 && (
+                                        <div style={{marginTop: "0.7vh"}}>
+                                            <label style={{fontFamily: "'Raleway', sans-serif", fontSize: "0.75vw"}} htmlFor="room-password">Password: </label>
+                                            <input className={styles.nick} type="text" name="room-password" id="room-password"
+                                                value={passwordArray[index]}
+                                                onChange={(e) => {
+                                                    let copyPasswordArray = [...passwordArray]
+                                                    copyPasswordArray[index] = e.target.value
+                                                    setPasswordArray(copyPasswordArray)
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                    <input className={styles.join} type="submit" value="Join"/>
+                                </form>
+                            </div>
                         </div>}
                     </React.Fragment>)
                 )}

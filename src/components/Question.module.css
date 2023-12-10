@@ -19,7 +19,8 @@
     justify-content: center;
     position: fixed;
     align-items: center;
-    left: 3.1%;
+    left: 3.25%;
+    top: 50%;
 }
 
 .button {
@@ -49,7 +50,12 @@
   text-align: center;
   font-family: 'Raleway', sans-serif;
   font-weight: 500;
-  }
+  transition: 0.3s
+}
+
+.button:hover {
+    box-shadow: 0 10px 7px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
 .correct {
     background: green;
@@ -78,4 +84,41 @@
     display: flex;
     justify-content: center;
     padding-top: -10%;
+}
+
+.leave {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: 2vh;
+    margin-left: 86.5vw;
+    align-items: center;
+    background: #FFFFFF;
+    border: 0 solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    color: #1A202C;
+    display: inline-flex;
+    font-family: Inter, sans-serif;
+    font-size: 1.5vw;
+    justify-content: center;
+    line-height: 24px;
+    overflow-wrap: break-word;
+    padding: 24px;
+    text-decoration: none;
+    width: 10vw;
+    height: 7vh;
+    border-radius: 1.75vw;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    transition: 0.3s
+}
+
+.leave:hover {
+    box-shadow: 0 10px 7px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }

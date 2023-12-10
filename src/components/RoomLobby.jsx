@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { avatarArray } from "./avatarArray"
 import { useNavigate, useParams } from "react-router-dom"
 import { useFirebaseContext } from "../hooks/useFirebaseContext"
+import styles from "./RoomLobby.module.css"
 
 const RoomLobby = ({user}) => {
     const{id} = useParams()

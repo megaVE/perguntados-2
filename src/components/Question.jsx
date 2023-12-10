@@ -71,7 +71,7 @@ const Question = ({user, category}) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <button onClick={() => {navigate('/play')}}>Leave</button>
+            <button className={styles.leave} onClick={() => {navigate('/play')}}>Leave</button>
             <h2 className={styles.title}>{question ? parse(question.title) : "Loading..."}</h2>
             {question?.answers && (
                 <div className={styles.questionsContainer}>
