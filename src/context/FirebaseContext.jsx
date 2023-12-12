@@ -59,9 +59,9 @@ export const FirebaseContextProvider = ({children}) => {
         const users = await getUsers()
         const deletedUser = users.filter(element => element.name === name)
 
-        if(deletedUser.lenght === 0) return
+        if(deletedUser.length === 0) return
 
-        deleteOperation("users", deletedUser.id)
+        deleteOperation("users", deletedUser[0].id)
     }
 
     // Rooms Table
@@ -81,7 +81,7 @@ export const FirebaseContextProvider = ({children}) => {
             const existentNames = existentRooms.reduce((acc, room) => [...acc, room.name], [])
             if(existentNames.includes(name)) return alert("Room creation attempt error! Room name already taken")
 
-            // createOperation("rooms", {name, owner, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
+            createOperation("rooms", {name, owner, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
             
             alert("Room created successfully!")
             navigate(`/play/${name}`)
@@ -96,16 +96,16 @@ export const FirebaseContextProvider = ({children}) => {
         const rooms = await getRooms()
         const deletedRoom = rooms.filter(element => element.name === name)
 
-        if(users.lenght === 0) return
+        if(deletedRoom.length === 0) return
 
-        deleteOperation("rooms", deletedRoom.id)
+        deleteOperation("rooms", deletedRoom[0].id)
     }
 
     const joinRoom = async (roomName, userName, userAvatar) => {
         const rooms = await getRooms()
         const joinedRoom = rooms.filter(element => element.name === roomName)
 
-        if(joinedRoom.lenght === 0) return alert("Error joining room! Please try again later")
+        if(joinedRoom.length === 0) return alert("Error joining room! Please try again later")
         if(joinedRoom.guest.name !== "") return alert("Error joining room! The room is already full")
 
         const guest = {name: userName, avatar: userAvatar, ready: false}
@@ -119,8 +119,8 @@ export const FirebaseContextProvider = ({children}) => {
         try{
             const rooms = await getRooms()
             const currentRoom = rooms.filter(element => element.name === room)
-            
-            return (currentRoom.lenght > 0) ? currentRoom[0] : alert("Room loading error! Please try again later!")
+
+            return (currentRoom.length > 0) ? currentRoom[0] : alert("Room loading error! Please try again later!")
         } catch(error){
             console.log(error)
             return alert("Room loading error! Please try again later")

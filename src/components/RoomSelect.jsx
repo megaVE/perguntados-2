@@ -8,8 +8,8 @@ import styles from "./RoomSelect.module.css"
 const MIN_ROOM_LENGTH = 4
 const MAX_ROOM_LENGTH = 30
 
-const RoomSelect = ({user}) => {
-    const{createUser} = useFirebaseContext()
+const RoomSelect = ({user, setUser}) => {
+    const{deleteUser} = useFirebaseContext()
 
     // Checks if the user has logged in
     const navigate = useNavigate()
@@ -22,24 +22,16 @@ const RoomSelect = ({user}) => {
     // }, [])
 
     // Checks if the user closes the tab
+    const handleBeforeUnload = async (e) => {
+        e.preventDefault()
+        await deleteUser(user.name)
+        setUser(null)
+    }
+
     useEffect(() => {
-        const handleBeforeUnload = (e) => { e.preventDefault() }
-        
-        const handleUnload = async (e) => {
-            const message = "o/";
-            (e || window).returnValue = message; //Gecko + IE
-            return message;
-            // e.preventDefault()
-            // await createUser("caralho", 9)
-        }
-
         window.addEventListener('beforeunload', handleBeforeUnload)
-        window.addEventListener('unload', handleUnload)
 
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload)
-            window.removeEventListener('unload', handleUnload)
-        }
+        return () => { window.removeEventListener('beforeunload', handleBeforeUnload) }
     }, [])
             
     const{createRoom, getRooms} = useFirebaseContext()
@@ -90,7 +82,7 @@ const RoomSelect = ({user}) => {
                         <img src={avatarArray[user?.avatar]} alt="avatar" className={styles.photo}/>
                         <p style={{marginLeft: "1vw"}}>{user?.name}</p>
                     </div>
-                    <button style={{marginLeft: "3vw"}} className={styles.button} onClick={() => {navigate('/')}}>Quit</button>
+                    <button style={{marginLeft: "3vw"}} className={styles.button} onClick={(e) => {handleBeforeUnload(e) ; navigate('/')}}>Quit</button>
                 </div>
                 <h2>Available Rooms:</h2>
                 {isCreatingNewRoom
