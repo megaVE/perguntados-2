@@ -21,8 +21,8 @@ export const FirebaseContextProvider = ({children}) => {
     }
 
     const updateOperation = async (reference, data, id) => {
-        const updateDoc = doc(db, reference, id)
-        await updateDoc(updateDoc, data)
+        const changedDoc = doc(db, reference, id)
+        await updateDoc(changedDoc, data)
     }
 
     const deleteOperation = async (reference, id) => { await deleteDoc(doc(db, reference, id)) }
@@ -34,6 +34,18 @@ export const FirebaseContextProvider = ({children}) => {
         }catch(error){
             console.log(error)
             return alert("Error! Try again later")
+        }
+    }
+
+    const getUserByName = async (name) => {
+        try{
+            const users = await getUsers()
+            const filteredUsers = users.filter(element => element.name === name)
+
+            return (filteredUsers.length > 0) ? filteredUsers[0] : undefined
+        }catch(error){
+            console.log(error)
+            return null
         }
     }
 
@@ -56,12 +68,11 @@ export const FirebaseContextProvider = ({children}) => {
 
     const deleteUser = async (name) => {
         console.log("deleteUser: ", name)
-        const users = await getUsers()
-        const deletedUser = users.filter(element => element.name === name)
+        const deletedUser = await getUserByName(name)
 
-        if(deletedUser.length === 0) return
+        if(!deletedUser) return
 
-        deleteOperation("users", deletedUser[0].id)
+        await deleteOperation("users", deletedUser.id)
     }
 
     // Rooms Table
@@ -73,6 +84,18 @@ export const FirebaseContextProvider = ({children}) => {
             return alert("Error loading the existent rooms! Try again later")
         }        
     }
+
+    const getRoomByName = async (name) => {
+        try{
+            const rooms = await getRooms()
+            const filteredRooms = rooms.filter(element => element.name === name)
+
+            return (filteredRooms.length > 0) ? filteredRooms[0] : undefined
+        }catch(error){
+            console.log(error)
+            return null
+        }
+    }
     
     const createRoom = async (name, owner, password) => {
         console.log("createRoom: ", name, owner, password)
@@ -81,7 +104,7 @@ export const FirebaseContextProvider = ({children}) => {
             const existentNames = existentRooms.reduce((acc, room) => [...acc, room.name], [])
             if(existentNames.includes(name)) return alert("Room creation attempt error! Room name already taken")
 
-            createOperation("rooms", {name, owner, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
+            createOperation("rooms", {name, owner: {...owner, ready: false}, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
             
             alert("Room created successfully!")
             navigate(`/play/${name}`)
@@ -93,45 +116,90 @@ export const FirebaseContextProvider = ({children}) => {
 
     const deleteRoom = async (name) => {
         console.log("deleteRoom: ", name)
-        const rooms = await getRooms()
-        const deletedRoom = rooms.filter(element => element.name === name)
+        const deletedRoom = await getRoomByName(name)
 
-        if(deletedRoom.length === 0) return
-
-        deleteOperation("rooms", deletedRoom[0].id)
-    }
-
-    const joinRoom = async (roomName, userName, userAvatar) => {
-        const rooms = await getRooms()
-        const joinedRoom = rooms.filter(element => element.name === roomName)
-
-        if(joinedRoom.length === 0) return alert("Error joining room! Please try again later")
-        if(joinedRoom.guest.name !== "") return alert("Error joining room! The room is already full")
-
-        const guest = {name: userName, avatar: userAvatar, ready: false}
-        const updatedJoinedRoom = {...joinedRoom, guest}
-
-        updateOperation("rooms", updatedJoinedRoom, updatedJoinedRoom.id)        
+        if(!deletedRoom) return
+        
+        await deleteOperation("rooms", deletedRoom.id)
     }
 
     // Match
-    const getMatch = async (room) => {
+    const joinGuest = async (name, user) => {
         try{
-            const rooms = await getRooms()
-            const currentRoom = rooms.filter(element => element.name === room)
-
-            return (currentRoom.length > 0) ? currentRoom[0] : alert("Room loading error! Please try again later!")
-        } catch(error){
+            const roomJoined = await getRoomByName(name)
+    
+            if(!roomJoined) return alert("Error joining room! Please try again later")
+            if(roomJoined.guest.name !== "") return alert("Error joining room! The room is already full")
+    
+            const guest = {name: user.name, avatar: user.avatar, ready: false}
+            const updatedRoom = {...roomJoined, guest}
+    
+            await updateOperation("rooms", updatedRoom, updatedRoom.id)
+            navigate(`/play/${name}`)
+        }catch(error){
             console.log(error)
-            return alert("Room loading error! Please try again later")
         }
     }
 
+    const leaveGuest = async (name) => {
+        try{
+            const roomLeft = await getRoomByName(name)
+
+            if(!roomLeft) return
+
+            const guest = {name: "", avatar: null, ready: false}
+            const updatedRoom = {...roomLeft, guest}
+
+            await updateOperation("rooms", updatedRoom, updatedRoom.id)
+            navigate('/play')
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const readyHost = async (name, isReady) => {
+        try{
+            const room = await getRoomByName(name)
+            
+            const updatedHost = {...room.owner, ready: !isReady}
+            const updatedRoom = {...room, owner: updatedHost}
+
+            await updateOperation("rooms", updatedRoom, updatedRoom.id)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const readyGuest = async (name, isReady) => {
+        try{
+            const room = await getRoomByName(name)
+
+            const updatedGuest = {...room.guest, ready: !isReady}
+            const updatedRoom = {...room, guest: updatedGuest}
+
+            await updateOperation("rooms", updatedRoom, updatedRoom.id)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    // Random
+    const checkUser = (user) => {
+        console.log("Current User: ", user)
+        
+        if(user) return
+        
+        alert("Log in before going to the Room Hub")
+        navigate("/")
+    }
     return(
-        <FirebaseContext.Provider value={
-            {createUser, getUsers, deleteUser,
-            createRoom, getRooms, deleteRoom,
-            joinRoom, getMatch}}>
+        <FirebaseContext.Provider value={{
+            checkUser,
+            createUser, getUsers, deleteUser,
+            createRoom, getRooms, deleteRoom, getRoomByName,
+            joinGuest, leaveGuest,
+            readyHost, readyGuest
+        }}>
             {children}
         </FirebaseContext.Provider>
     )

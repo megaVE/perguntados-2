@@ -6,41 +6,48 @@ import styles from "./RoomLobby.module.css"
 
 const RoomLobby = ({user, setUser}) => {
     const{id} = useParams()
-    const{getMatch, deleteUser, deleteRoom} = useFirebaseContext()
+    const{checkUser, deleteUser, deleteRoom, getRoomByName, leaveGuest, readyHost, readyGuest} = useFirebaseContext()
     const navigate = useNavigate()
 
     const[match, setMatch] = useState(null)
-    const[host, setHost] = useState(null)
-    const[guest, setGuest] = useState(null)
+    const[host, setHost] = useState(undefined)
+    const[guest, setGuest] = useState(undefined)
+
+    // Checks if both users are ready
+    useEffect(() => { if(host?.ready && guest?.ready) navigate(`/play/${id}/start`) }, [host, guest])
+
+    // Checks if the user has logged in
+    useEffect(() => { checkUser(user) }, [])
 
     // Loads the participants data
-    useEffect(() => {
-        const loadMatch = async() => {
-            const newMatch = await getMatch(id)
-            if(newMatch === null) return navigate('/play')
-            
-            setMatch(newMatch)
+    const roomFetch = async() => {
+        const newMatch = await getRoomByName(id)
+        if(!newMatch) return navigate('/play')
+        console.log(newMatch)
 
-            if(user.name === newMatch.owner.name){
-                // Host display
-                setHost(user)
-            }else{
-                // Guest display
-                setHost(match.owner)
-                setGuest(user)
-            }
-        }
-        loadMatch()
-    }, [])
+        setMatch(newMatch)
+        setHost(newMatch.owner)
+        setGuest((newMatch.guest.name.length > 0) ? newMatch.guest : undefined)
+    }
+    useEffect(() => { roomFetch() }, [])
 
     // Checks if the user closes the tab
+    const unloadRoom = async () => {
+        if(user.name === match.owner.name){
+            // Host leaves the room
+            console.log("Deleting Room")
+            await deleteRoom(match.name)
+        }else{
+            // Guest leave the room
+            console.log("Leaving Room")
+            await leaveGuest(match.name)
+        }
+    }
+
     const handleBeforeUnload = async (e) => {
         e.preventDefault()
 
-        if(user.name === match.owner.name){
-            await deleteRoom(match.name)
-            setMatch(null)
-        }
+        await unloadRoom()
         
         await deleteUser(user.name)
         setUser(null)
@@ -52,19 +59,13 @@ const RoomLobby = ({user, setUser}) => {
         return () => { window.removeEventListener('beforeunload', handleBeforeUnload) }
     }, [])
 
-    const unloadRoom = async () => {
-        if(user.name === match.owner.name){
-            await deleteRoom(match.name)
-            setMatch(null)
-        }
-        
-        navigate('/play')
-    }
+    console.log(host)
 
     return(
         <div>
             <div>
-                <button onClick={unloadRoom}>Leave</button>
+                <button onClick={async () => { await unloadRoom() ; navigate('/play') }}>Leave</button>
+                <button onClick={roomFetch}>Update Room</button>
                 {/* Host */}
                 <div style={{display: "flex", alignItems: "center"}}>
                     <p>Host: </p>
@@ -72,7 +73,7 @@ const RoomLobby = ({user, setUser}) => {
                     ? (<>
                         <img src={avatarArray[host.avatar]} alt="avatar-host" style={{height: "30px", width: "30px", margin: "0 10px"}}/>
                         <p>{host.name}</p>
-                        {host.name === user.name && <button onClick={() => { setHost({...host, ready: !host.ready}) }}>Ready</button>}
+                        {host.name === user.name && <button onClick={async () => { await readyHost(match.name, host.ready) ; setHost({...host, ready: !host.ready}) }}>Ready</button>}
                         <span className={`lnr ${host.ready ? "lnr-thumbs-up" : "lnr-thumbs-down"}`} style={{color: `${host.ready ? "green" : "red"}`}}></span>
                     </>)
                     : (<p style={{marginLeft: "10px"}}>Loading...</p>)}
@@ -84,7 +85,7 @@ const RoomLobby = ({user, setUser}) => {
                     ? (<>
                         <img src={avatarArray[guest.avatar]} alt="avatar-guest" style={{height: "30px", width: "30px", margin: "0 10px"}}/>
                         <p>{guest.name}</p>
-                        {guest.name === user.name && <button onClick={() => { setGuest({...guest, ready: !guest.ready}) }}>Ready</button>}
+                        {guest.name === user.name && <button onClick={async () => { await readyGuest(match.name, guest.ready) ; setGuest({...guest, ready: !guest.ready}) }}>Ready</button>}
                         <span className={`lnr ${guest.ready ? "lnr-thumbs-up" : "lnr-thumbs-down"}`} style={{color: `${guest.ready ? "green" : "red"}`}}></span>
                     </>)
                     : (<p style={{marginLeft: "10px"}}>Waiting Player...</p>)}

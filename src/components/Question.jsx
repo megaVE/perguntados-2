@@ -7,7 +7,8 @@ import parse from 'html-react-parser'
 
 import videogame from "../database/videogame.json"
 import computer from "../database/computer.json"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useFirebaseContext } from "../hooks/useFirebaseContext"
 
 const categories = {videogame, computer}
 
@@ -28,15 +29,11 @@ function shuffleArray(array){
 }
 
 const Question = ({user, category}) => {
-    // Checks if the user is logged in
     const navigate = useNavigate()
-    // useEffect(() => {
-    //     console.log("Current User: ", user)
-    //     if(user === null){
-    //         alert("Log in before joining a Room")
-    //         navigate("/")
-    //     }
-    // }, [])
+    const{checkUser} = useFirebaseContext()
+
+    // Checks if the user is logged in
+    useEffect(() => { checkUser(user) }, [])
 
     const[question, setQuestion] = useState(undefined);
     const[currentAnswer, setCurrentAnswer] = useState(null);
@@ -53,7 +50,7 @@ const Question = ({user, category}) => {
     }
 
     // Creates the first question
-    useEffect(() => {createQuestion(computer)}, [])
+    useEffect(() => {createQuestion(categories[0])}, [])
 
     // Question Submit
     const handleSubmit = (e) => {
@@ -64,7 +61,7 @@ const Question = ({user, category}) => {
     
         // Creates a new question
         setTimeout(() => {
-            createQuestion(computer)
+            createQuestion(categories[0])
             setCurrentAnswer(null)
         }, 1500)
     }

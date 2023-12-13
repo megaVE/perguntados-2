@@ -8,18 +8,14 @@ import styles from "./RoomSelect.module.css"
 const MIN_ROOM_LENGTH = 4
 const MAX_ROOM_LENGTH = 30
 
+const MAX_ROOM_VIEW_LENGTH = 10
+
 const RoomSelect = ({user, setUser}) => {
-    const{deleteUser} = useFirebaseContext()
+    const navigate = useNavigate()
+    const{checkUser, deleteUser, getRooms, createRoom, joinGuest} = useFirebaseContext()
 
     // Checks if the user has logged in
-    const navigate = useNavigate()
-    // useEffect(() => {
-    //     console.log("Current User: ", user)
-    //     if(user === null){
-    //         alert("Log in before going to the Room Hub")
-    //         navigate("/")
-    //     }
-    // }, [])
+    useEffect(() => { checkUser(user) }, [])
 
     // Checks if the user closes the tab
     const handleBeforeUnload = async (e) => {
@@ -34,19 +30,18 @@ const RoomSelect = ({user, setUser}) => {
         return () => { window.removeEventListener('beforeunload', handleBeforeUnload) }
     }, [])
             
-    const{createRoom, getRooms} = useFirebaseContext()
-
     // Loads the pre-existent rooms
     const[rooms, setRooms] = useState([])
 
-    useEffect(() => {
-        const fetchRooms = async () => {
-            const fetchedRooms = await getRooms()
-            setRooms(fetchedRooms)
-            setPasswordArray(fetchedRooms.reduce((acc) => [...acc, ""], []))
-        }
-        fetchRooms()
-    }, [])
+    const fetchRooms = async () => {
+        const fetchedRooms = await getRooms()
+        
+        setRooms(fetchedRooms)
+        
+        setPasswordArray(fetchedRooms.reduce((acc) => [...acc, ""], []))
+    }
+
+    useEffect(() => { fetchRooms() }, [])
 
     const[isCreatingNewRoom, setIsCreatingNewRoom] = useState(false)
     const[roomName, setRoomName] = useState("")
@@ -54,29 +49,34 @@ const RoomSelect = ({user, setUser}) => {
     const[passwordArray, setPasswordArray] = useState([])
 
     // Creates a new room
-    const newRoom = (e) => {
+    const newRoom = async (e) => {
         e.preventDefault()
 
         if(roomName.length < MIN_ROOM_LENGTH) return alert(`Room name too short! Must be at least ${MIN_ROOM_LENGTH} characters`)
         if(roomName.length > MAX_ROOM_LENGTH) return alert(`Room name too long! Must be at most ${MAX_ROOM_LENGTH} characters`)
 
-        createRoom(roomName, user, roomPassword)
+        await createRoom(roomName, user, roomPassword)
     }
 
-    const joinRoom = (e, index) => {
+    const joinRoom = async (e, index) => {
         e.preventDefault()
 
+        const room = rooms[index]
         console.log(rooms, index)
-        if(rooms[index].password.length > 0 && passwordArray[index] !== rooms[index].password) return alert("Error joining room! Incorrect password")
+        if(room.password.length > 0 && passwordArray[index] !== room.password) return alert("Error joining room! Incorrect password")
 
-        alert("Joining room...")
-        navigate(`/play/${rooms[index].name}`)
+        console.log("RoomName: ", room.name, "User: ", user)
+        await joinGuest(room.name, user)
+    }
+
+    // Enshorts the name of a room
+    const shortString = (text, maxSize) => {
+        return (text.length <= maxSize) ? text : text.slice(0, maxSize) + "..."
     }
 
     return(
         <div>
             <div>
-                {/* Deletes user from Database */}
                 <div className={styles.user}>
                     <div style={{display: "flex", justifyContent: "center"}}>
                         <img src={avatarArray[user?.avatar]} alt="avatar" className={styles.photo}/>
@@ -85,6 +85,7 @@ const RoomSelect = ({user, setUser}) => {
                     <button style={{marginLeft: "3vw"}} className={styles.button} onClick={(e) => {handleBeforeUnload(e) ; navigate('/')}}>Quit</button>
                 </div>
                 <h2>Available Rooms:</h2>
+                <button class={styles.createbutton} onClick={fetchRooms}>Update Rooms</button>
                 {isCreatingNewRoom
                 ? (<form onSubmit={newRoom} style={{display: "flex", backgroundColor: "#fff", padding: "10px 0"}}>
                     <div>
@@ -115,7 +116,7 @@ const RoomSelect = ({user, setUser}) => {
                                     <p style={{fontFamily: "'Raleway', sans-serif", fontSize: "0.75vw", marginTop: "-2.2vh"}}>Hosted by:</p>
                                     <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "-0.75vh"}}>
                                         <img src={avatarArray[room.owner.avatar]} alt={`avatar-${room.owner.name}`} style={{height: "7vh", width: "3.5vw", borderRadius: "3vw"}}/>
-                                        <p style={{fontFamily: "'Raleway', sans-serif", fontSize: "1.3vw", marginLeft: "0.6vw"}}>{room.owner.name}</p>
+                                        <p style={{fontFamily: "'Raleway', sans-serif", fontSize: "1.3vw", marginLeft: "0.6vw"}}>{shortString(room.owner.name, MAX_ROOM_VIEW_LENGTH)}</p>
                                     </div>
                                 </div>
                                 <form onSubmit={(e) => {joinRoom(e, index)}}>

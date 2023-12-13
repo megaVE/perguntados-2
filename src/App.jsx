@@ -10,6 +10,7 @@ import Question from './components/Question'
 import RoomSelect from './components/RoomSelect'
 import RoomLobby from './components/RoomLobby.jsx'
 import ReturnScreen from './components/ReturnScreen.jsx'
+import GameRoom from './components/GameRoom.jsx'
 
 function App() {
     const[user, setUser] = useState(null)
@@ -19,11 +20,10 @@ function App() {
         <BrowserRouter>
             <FirebaseContextProvider>
                 <Routes>
-                    {/* <Route path="/play/:id" element={<Question setUser={setUser} user={user} category=""/>}/> */}
+                    <Route path="/play/:id/start" element={user ? <GameRoom setUser={setUser} user={user}/> : <ReturnScreen/>}/>
                     <Route path="/play/:id" element={user ? <RoomLobby setUser={setUser} user={user}/> : <ReturnScreen/>}/>
                     <Route path="/play" element={user ? <RoomSelect setUser={setUser} user={user}/> : <ReturnScreen/>}/>
                     <Route path="/" element={<Login setUser={setUser} user={user}/>}/>
-                    {/* <Route path="/" element={<RoomLobby user={user}/>}/> */}
                 </Routes>
             </FirebaseContextProvider>
         </BrowserRouter>
