@@ -4,7 +4,7 @@ import styles from "./Login.module.css"
 import { useFirebaseContext } from "../hooks/useFirebaseContext"
 
 const MIN_NAME_LENGTH = 4
-const MAX_NAME_LENGTH = 30
+const MAX_NAME_LENGTH = 25
 
 import { avatarArray } from "./avatarArray"
 

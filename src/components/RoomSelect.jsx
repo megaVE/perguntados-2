@@ -85,7 +85,7 @@ const RoomSelect = ({user, setUser}) => {
                     <button style={{marginLeft: "3vw"}} className={styles.button} onClick={(e) => {handleBeforeUnload(e) ; navigate('/')}}>Quit</button>
                 </div>
                 <h2>Available Rooms:</h2>
-                <button class={styles.createbutton} onClick={fetchRooms}>Update Rooms</button>
+                <button class={styles.reload} onClick={fetchRooms}><span class="lnr lnr-sync"></span></button>
                 {isCreatingNewRoom
                 ? (<form onSubmit={newRoom} style={{display: "flex", backgroundColor: "#fff", padding: "10px 0"}}>
                     <div>
