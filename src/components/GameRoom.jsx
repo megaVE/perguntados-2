@@ -91,31 +91,33 @@ const GameRoom = ({user, setUser}) => {
                             <h2 style={{ paddingTop: "3%", fontSize: "4vw" }}>Scoreboard</h2>
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <img src={avatarArray[room.owner.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="host-avatar"/>
-                                <p>{room.owner.name} : {room.match.score.owner}</p>
+                                <p>{room.owner.name} : {<span class={(room.match.score.owner >= 1) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>} {<span class={(room.match.score.owner >= 2) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <img src={avatarArray[room.guest.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="guest-avatar"/>
-                                <p>{room.guest.name} : {room.match.score.guest}</p>
+                                <p>{room.guest.name} : {<span class={(room.match.score.guest >= 1) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>} {<span class={(room.match.score.guest >= 2) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>}</p>
                             </div>
                             <p>Wait for your turn...</p>
                         </div>
                     </div>)}
+
                 {/* Question Page */}
                 {!(room.match.score.owner >= 2 || room.match.score.guest >= 2) && room.match.turn === user.name && (<>
                     <button className={styles.botoes} style={{ marginTop: "1.7%", marginLeft: "75.5%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
                     <QuestionPage setVictory={setVictory}/>
                 </>)}
+
                 {/* Result Page */}
                 {(room.match.score.owner >= 2 || room.match.score.guest >= 2) && (<div>
                     <div className={styles.square}>
                         <h2 style={{ paddingTop: "3%", fontSize: "4vw" }}>Results:</h2>
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <img src={avatarArray[room.owner.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}}  alt="host-avatar"/>
-                            <p>{room.owner.name} : {room.match.score.owner}</p>
+                            <p>{room.owner.name} : {<span class={(room.match.score.owner >= 1) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>} {<span class={(room.match.score.owner >= 2) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>}</p>
                         </div>
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <img src={avatarArray[room.guest.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="guest-avatar"/>
-                            <p>{room.guest.name} : {room.match.score.guest}</p>
+                            <p>{room.guest.name} : {<span class={(room.match.score.guest >= 1) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>} {<span class={(room.match.score.guest >= 2) ? "lnr lnr-star" : "lnr lnr-star-empty"}></span>}</p>
                         </div>
                         <p>You {`${(room.match.score.owner >= 2 && user.name === room.owner.name || room.match.score.guest >= 2 && user.name === room.guest.name) ? "Win!" : "Lost"}`}</p>
                         <button className={styles.botoes} style={{ marginTop: "60%", marginLeft: "40%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
