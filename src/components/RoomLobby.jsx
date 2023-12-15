@@ -30,6 +30,16 @@ const RoomLobby = ({user, setUser}) => {
         setGuest((newMatch.guest.name.length > 0) ? newMatch.guest : undefined)
     }
     useEffect(() => { roomFetch() }, [])
+    
+    // Constantly updates the page's data
+    useEffect(() => {
+        const update = setTimeout(() => {
+            console.log("Timeout Reload")
+            roomFetch()
+        }, 1500)
+
+        return () => clearTimeout(update)
+    }, [match])
 
     // Checks if the user closes the tab
     const unloadRoom = async () => {

@@ -58,17 +58,20 @@ const QuestionPage = ({setVictory}) => {
     useEffect(() => { createQuestion(categories[0]) }, [])
 
     // Checks if enough questions were correct
-    useEffect(() => { console.log(hits) ; if(hits >= QUESTIONS_TO_CROWN) { setVictory(true) } },[hits])
+    useEffect(() => { console.log(hits) ; if(hits >= QUESTIONS_TO_CROWN) { setHits(0); setVictory(true) } },[hits])
 
     // Checks the submited reply
     const checkReply = () => {
         // Feedback
         console.log(currentAnswer, parse(question.correct), currentAnswer === parse(question.correct))
-        if(!currentAnswer === parse(question.correct)) setVictory(false)
+        if(currentAnswer === parse(question.correct)){
+            setHits(hits + 1)
+        }else{
+            setVictory(false)
+        }
         
         // Creates a new question
         setTimeout(() => {
-            setHits(hits + 1)
             setIsReplied(false)
             createQuestion(categories[(hits < QUESTIONS_TO_CROWN - 1) ? hits + 1 : QUESTIONS_TO_CROWN - 1])
             setCurrentAnswer(null)

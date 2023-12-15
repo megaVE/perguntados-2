@@ -41,8 +41,17 @@ const RoomSelect = ({user, setUser}) => {
         
         setPasswordArray(fetchedRooms.reduce((acc) => [...acc, ""], []))
     }
-
     useEffect(() => { fetchRooms() }, [])
+
+    // Constantly updates the page's data
+    useEffect(() => {
+        const update = setTimeout(() => {
+            console.log("Timeout Reload")
+            fetchRooms()
+        }, 1500)
+
+        return () => clearTimeout(update)
+    }, [rooms])
 
     const[isCreatingNewRoom, setIsCreatingNewRoom] = useState(false)
     const[roomName, setRoomName] = useState("")

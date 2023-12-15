@@ -26,6 +26,16 @@ const GameRoom = ({user, setUser}) => {
     }
     useEffect(() => { fetchRoom() }, [])
 
+    // Constantly updates the page's data
+    useEffect(() => {
+        const update = setTimeout(() => {
+            console.log("Timeout Reload")
+            fetchRoom()
+        }, 1500)
+
+        return () => clearTimeout(update)
+    }, [room])
+
     // Checks the feedback from the QuesitonPage
     const checkVictory = async () => {
         if(victory === null) return
@@ -34,9 +44,10 @@ const GameRoom = ({user, setUser}) => {
             console.log("Score added for ", user.name)
             await increaseScore(room.name, user.name)
         }
-
+        
         await changeTurn(room.name)
         await fetchRoom()
+        setVictory(null)
     }
     useEffect(() => { checkVictory() }, [victory])
 
@@ -94,7 +105,7 @@ const GameRoom = ({user, setUser}) => {
                     <button className={styles.botoes} style={{ marginTop: "1.7%", marginLeft: "75.5%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
                     <QuestionPage setVictory={setVictory}/>
                 </>)}
-
+                {/* Result Page */}
                 {(room.match.score.owner >= 2 || room.match.score.guest >= 2) && (<div>
                     <div className={styles.square}>
                         <h2 style={{ paddingTop: "3%", fontSize: "4vw" }}>Results:</h2>
