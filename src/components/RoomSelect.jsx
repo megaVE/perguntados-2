@@ -20,6 +20,7 @@ const RoomSelect = ({user, setUser}) => {
     // Checks if the user closes the tab
     const handleBeforeUnload = async (e) => {
         e.preventDefault()
+
         await deleteUser(user.name)
         setUser(null)
     }
@@ -85,7 +86,7 @@ const RoomSelect = ({user, setUser}) => {
                     <button style={{marginLeft: "3vw"}} className={styles.button} onClick={(e) => {handleBeforeUnload(e) ; navigate('/')}}>Quit</button>
                 </div>
                 <h2>Available Rooms:</h2>
-                <button class={styles.reload} onClick={fetchRooms}><span class="lnr lnr-sync"></span></button>
+                <button className={styles.reload} onClick={fetchRooms}><span className="lnr lnr-sync"></span></button>
                 {isCreatingNewRoom
                 ? (<form onSubmit={newRoom} style={{display: "flex", backgroundColor: "#fff", padding: "10px 0"}}>
                     <div>

@@ -104,7 +104,14 @@ export const FirebaseContextProvider = ({children}) => {
             const existentNames = existentRooms.reduce((acc, room) => [...acc, room.name], [])
             if(existentNames.includes(name)) return alert("Room creation attempt error! Room name already taken")
 
-            createOperation("rooms", {name, owner: {...owner, ready: false}, password, guest: {name: "", avatar: null, ready: false}, date: new Date()})
+            createOperation("rooms",{
+                name,
+                owner: {...owner, ready: false},
+                password,
+                guest: {name: "", avatar: null, ready: false},
+                date: new Date(),
+                match: {turn: owner.name, score: {owner: 0, guest: 0}}
+            })
             
             alert("Room created successfully!")
             navigate(`/play/${name}`)
@@ -183,6 +190,37 @@ export const FirebaseContextProvider = ({children}) => {
         }
     }
 
+    const changeTurn = async (name) => {
+        try{
+            const room = await getRoomByName(name)
+
+            const updatedTurn = (room.match.turn === room.owner.name) ? room.guest.name : room.owner.name
+            console.log("changing turn", updatedTurn)
+            const updatedMatch = {...room.match, turn: updatedTurn}
+            const updatedRoom = {...room, match: updatedMatch}
+
+            updateOperation("rooms", updatedRoom, updatedRoom.id)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const increaseScore = async (name, user) => {
+        try{
+            const room = await getRoomByName(name)
+            
+            const updatedScore = (room.owner.name === user)
+                ? {...room.match.score, owner: room.match.score.owner + 1}
+                : {...room.match.score, guest: room.match.score.guest + 1}
+            const updatedMatch = {...room.match, score: updatedScore}
+            const updatedRoom = {...room, match: updatedMatch}
+
+            await updateOperation("rooms", updatedRoom, updatedRoom.id)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
     // Random
     const checkUser = (user) => {
         console.log("Current User: ", user)
@@ -192,13 +230,15 @@ export const FirebaseContextProvider = ({children}) => {
         alert("Log in before going to the Room Hub")
         navigate("/")
     }
+
     return(
         <FirebaseContext.Provider value={{
             checkUser,
             createUser, getUsers, deleteUser,
             createRoom, getRooms, deleteRoom, getRoomByName,
             joinGuest, leaveGuest,
-            readyHost, readyGuest
+            readyHost, readyGuest,
+            changeTurn, increaseScore
         }}>
             {children}
         </FirebaseContext.Provider>

@@ -6,7 +6,6 @@ import { FirebaseContextProvider } from "./context/FirebaseContext.jsx"
 // Pages
 
 import Login from './components/Login'
-import Question from './components/Question'
 import RoomSelect from './components/RoomSelect'
 import RoomLobby from './components/RoomLobby.jsx'
 import ReturnScreen from './components/ReturnScreen.jsx'

@@ -59,8 +59,6 @@ const RoomLobby = ({user, setUser}) => {
         return () => { window.removeEventListener('beforeunload', handleBeforeUnload) }
     }, [])
 
-    console.log(host)
-
     return(
         <div>
             <div>
