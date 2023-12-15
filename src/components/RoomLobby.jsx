@@ -61,30 +61,30 @@ const RoomLobby = ({user, setUser}) => {
 
     return(
         <div>
-            <div>
-                <button onClick={async () => { await unloadRoom() ; navigate('/play') }}>Leave</button>
-                <button onClick={roomFetch}>Update Room</button>
+            <div className={styles.square}>
+                <button onClick={async () => { await unloadRoom() ; navigate('/play') }} className={styles.butao}>Leave</button>
+                <button onClick={roomFetch} className={styles.butao}>Update Room</button>
                 {/* Host */}
-                <div style={{display: "flex", alignItems: "center"}}>
+                <div style={{display: "flex", alignItems: "center", justifyContent: "left", marginTop: "4%", marginLeft: "3%"}}>
                     <p>Host: </p>
                     {host
                     ? (<>
-                        <img src={avatarArray[host.avatar]} alt="avatar-host" style={{height: "30px", width: "30px", margin: "0 10px"}}/>
+                        <img src={avatarArray[host.avatar]} alt="avatar-host" style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}}/>
                         <p>{host.name}</p>
-                        {host.name === user.name && <button onClick={async () => { await readyHost(match.name, host.ready) ; setHost({...host, ready: !host.ready}) }}>Ready</button>}
+                        {host.name === user.name && <button className={styles.butao} style={{ marginTop: "0" }} onClick={async () => { await readyHost(match.name, host.ready) ; setHost({...host, ready: !host.ready}) }}>Ready</button>}
                         <span className={`lnr ${host.ready ? "lnr-thumbs-up" : "lnr-thumbs-down"}`} style={{color: `${host.ready ? "green" : "red"}`}}></span>
                     </>)
                     : (<p style={{marginLeft: "10px"}}>Loading...</p>)}
                 </div>
                 {/* Guest */}
-                <div style={{display: "flex", alignItems: "center"}}>
+                <div style={{display: "flex", alignItems: "center", justifyContent: "left", marginTop: "4%", marginLeft: "3%"}}>
                     <p>Guest: </p>
                     {guest
                     ? (<>
-                        <img src={avatarArray[guest.avatar]} alt="avatar-guest" style={{height: "30px", width: "30px", margin: "0 10px"}}/>
+                        <img src={avatarArray[guest.avatar]} alt="avatar-guest" style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}}/>
                         <p>{guest.name}</p>
-                        {guest.name === user.name && <button onClick={async () => { await readyGuest(match.name, guest.ready) ; setGuest({...guest, ready: !guest.ready}) }}>Ready</button>}
-                        <span className={`lnr ${guest.ready ? "lnr-thumbs-up" : "lnr-thumbs-down"}`} style={{color: `${guest.ready ? "green" : "red"}`}}></span>
+                        {guest.name === user.name && <button className={styles.butao} style={{ marginTop: "0" }} onClick={async () => { await readyGuest(match.name, guest.ready) ; setGuest({...guest, ready: !guest.ready}) }}>Ready</button>}
+                        <span className={`lnr ${guest.ready ? "lnr-thumbs-up" : "lnr-thumbs-down"}`} style={{color: `${guest.ready ? "green" : "red"}`, marginLeft: "1%"}}></span>
                     </>)
                     : (<p style={{marginLeft: "10px"}}>Waiting Player...</p>)}
                 </div>

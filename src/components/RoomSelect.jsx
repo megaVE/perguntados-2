@@ -8,7 +8,7 @@ import styles from "./RoomSelect.module.css"
 const MIN_ROOM_LENGTH = 4
 const MAX_ROOM_LENGTH = 30
 
-const MAX_ROOM_VIEW_LENGTH = 10
+const MAX_ROOM_VIEW_LENGTH = 7
 
 const RoomSelect = ({user, setUser}) => {
     const navigate = useNavigate()
@@ -88,10 +88,10 @@ const RoomSelect = ({user, setUser}) => {
                 <h2>Available Rooms:</h2>
                 <button className={styles.reload} onClick={fetchRooms}><span className="lnr lnr-sync"></span></button>
                 {isCreatingNewRoom
-                ? (<form onSubmit={newRoom} style={{display: "flex", backgroundColor: "#fff", padding: "10px 0"}}>
+                ? (<form onSubmit={newRoom} className={styles.create}>
                     <div>
                         <label htmlFor="name">Room Name: </label>
-                        <input type="text" name="name" id="name"
+                        <input type="text" name="name" id="name" className={styles.input}
                             value={roomName}
                             onChange={(e) => {setRoomName(e.target.value)}}
                         />
@@ -99,11 +99,11 @@ const RoomSelect = ({user, setUser}) => {
                     <div>
                         <label htmlFor="password">Password: </label>
                         <input type="text" name="password" id="password"
-                            value={roomPassword}
+                            value={roomPassword} className={styles.input}
                             onChange={(e) => {setRoomPassword(e.target.value)}}
                         />
                     </div>
-                    <input type="submit" value="Create Room"/>
+                    <input type="submit" className={styles.createroom} value="Create Room"/>
                 </form>)
                 : (<button className={styles.createbutton} onClick={() => {setIsCreatingNewRoom(true)}}>Create New Room</button>)}
             </div>

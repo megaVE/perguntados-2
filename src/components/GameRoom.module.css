@@ -1,3 +1,38 @@
+.botoes {
+    align-items: center;
+    background: #FFFFFF;
+    border: 0 solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    color: #1A202C;
+    display: inline-flex;
+    font-family: Inter, sans-serif;
+    font-size: 1.1vw;
+    font-weight: 700;
+    height: 5vh;
+    justify-content: center;
+    line-height: 24px;
+    overflow-wrap: break-word;
+    text-decoration: none;
+    width: 10vw;
+    border-radius: 2vw;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    transition: 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.botoes:hover {
+    box-shadow: 0 6px 6px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
 .square {
     margin-top: 7vh;
     justify-content: center;
@@ -15,36 +50,7 @@
     font-size: 2vw;
 }
 
-.butao {
-    align-items: center;
-    background: #FFFFFF;
-    border: 0 solid #E2E8F0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    box-sizing: border-box;
-    color: #1A202C;
-    display: inline-flex;
-    font-family: Inter, sans-serif;
-    font-size: 1.1vw;
-    font-weight: 700;
-    height: 5vh;
-    justify-content: center;
-    line-height: 24px;
-    overflow-wrap: break-word;
-    text-decoration: none;
-    width: 10vw;
-    margin-top: 2%;
-    margin-left: 1%;
-    margin-right: 1%;
-    border-radius: 2vw;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    text-align: center;
+.texto {
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
-    transition: 0.3s;
-}
-.butao:hover {
-    box-shadow: 0 6px 6px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }

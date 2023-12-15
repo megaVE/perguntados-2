@@ -226,3 +226,93 @@ h2 {
     box-shadow: 0 6px 6px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transform: rotate(180deg);
 }
+
+.create {
+    align-items: center;
+    background: #FFFFFF;
+    border: 0 solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    color: #1A202C;
+    display: inline-flex;
+    font-family: Inter, sans-serif;
+    font-size: 1.5vw;
+    font-weight: 700;
+    height: 8vh;
+    justify-content: left;
+    line-height: 24px;
+    overflow-wrap: break-word;
+    margin-left: 0.5%;
+    margin-top: -1%;
+    padding: 1vw;
+    padding-left: 1.5vw;
+    text-decoration: none;
+    width: 59vw;
+    border-radius: 2vw;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    transition: 0.3s
+}
+
+.input {
+    padding: 0.51vw 0.21vh;
+    width: 13vw;
+    height: 2vh;
+    margin-right: 1vw;
+    font-size: 60%;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.5vw;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    :focus{
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+}
+
+.createroom {
+    align-items: center;
+    background: #FFFFFF;
+    border: 0 solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    color: #1A202C;
+    display: inline-flex;
+    font-family: Inter, sans-serif;
+    font-size: 1.1vw;
+    font-weight: 700;
+    height: 5vh;
+    justify-content: center;
+    line-height: 24px;
+    overflow-wrap: break-word;
+    text-decoration: none;
+    width: 10vw;
+    border-radius: 2vw;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    transition: 0.3s;
+    bottom: 5%;
+    left: 1vw;
+}
+
+.createroom:hover {
+    box-shadow: 0 6px 6px 1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}

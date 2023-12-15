@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFirebaseContext } from '../hooks/useFirebaseContext'
 import { avatarArray } from './avatarArray'
-
+import styles from './GameRoom.module.css'
 import QuestionPage from './QuestionPage' 
 
 const MAX_SCORE = 2
@@ -72,44 +72,46 @@ const GameRoom = ({user, setUser}) => {
         <div>
             {room
             ? (<>
-                <button onClick={fetchRoom}>Updated Room</button>
-
-                {/* Waiting Page */}
-                {!(room.match.score.owner >= 2 || room.match.score.guest >= 2) && room.match.turn !== user.name && (<div>
-                    <button onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
-                    <h2>Scoreboard</h2>
-                    <div>
-                        <img src={avatarArray[room.owner.avatar]} alt="host-avatar"/>
-                        <p>{room.owner.name} : {room.match.score.owner}</p>
-                    </div>
-                    <div>
-                        <img src={avatarArray[room.guest.avatar]} alt="guest-avatar"/>
-                        <p>{room.guest.name} : {room.match.score.guest}</p>
-                    </div>
-                    <p>Wait for your turn</p>
-                </div>)}
-
+                <button className={styles.botoes} style={{ marginTop: "1.7%", marginLeft: "86.5%"}} onClick={fetchRoom}>Update Room</button>
+                    {/* Waiting Page */}
+                    {!(room.match.score.owner >= 2 || room.match.score.guest >= 2) && room.match.turn !== user.name && (<div>
+                        <button className={styles.botoes} style={{ marginTop: "1.7%", marginLeft: "75.5%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
+                        <div className={styles.square}>
+                            <h2 style={{ paddingTop: "3%", fontSize: "4vw" }}>Scoreboard</h2>
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <img src={avatarArray[room.owner.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="host-avatar"/>
+                                <p>{room.owner.name} : {room.match.score.owner}</p>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <img src={avatarArray[room.guest.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="guest-avatar"/>
+                                <p>{room.guest.name} : {room.match.score.guest}</p>
+                            </div>
+                            <p>Wait for your turn...</p>
+                        </div>
+                    </div>)}
                 {/* Question Page */}
                 {!(room.match.score.owner >= 2 || room.match.score.guest >= 2) && room.match.turn === user.name && (<>
-                    <button onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
+                    <button className={styles.botoes} style={{ marginTop: "1.7%", marginLeft: "75.5%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
                     <QuestionPage setVictory={setVictory}/>
                 </>)}
 
                 {(room.match.score.owner >= 2 || room.match.score.guest >= 2) && (<div>
-                    <h2>Results:</h2>
-                    <div>
-                        <img src={avatarArray[room.owner.avatar]} alt="host-avatar"/>
-                        <p>{room.owner.name} : {room.match.score.owner}</p>
+                    <div className={styles.square}>
+                        <h2 style={{ paddingTop: "3%", fontSize: "4vw" }}>Results:</h2>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <img src={avatarArray[room.owner.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}}  alt="host-avatar"/>
+                            <p>{room.owner.name} : {room.match.score.owner}</p>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <img src={avatarArray[room.guest.avatar]} style={{height: "10vh", width: "5vw", margin: "0 10px", borderRadius: "10vw"}} alt="guest-avatar"/>
+                            <p>{room.guest.name} : {room.match.score.guest}</p>
+                        </div>
+                        <p>You {`${(room.match.score.owner >= 2 && user.name === room.owner.name || room.match.score.guest >= 2 && user.name === room.guest.name) ? "Win!" : "Lost"}`}</p>
+                        <button className={styles.botoes} style={{ marginTop: "60%", marginLeft: "40%"}} onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
                     </div>
-                    <div>
-                        <img src={avatarArray[room.guest.avatar]} alt="guest-avatar"/>
-                        <p>{room.guest.name} : {room.match.score.guest}</p>
-                    </div>
-                    <p>You {`${(room.match.score.owner >= 2 && user.name === room.owner.name || room.match.score.guest >= 2 && user.name === room.guest.name) ? "Win!" : "Lost"}`}</p>
-                    <button onClick={async () => {await unloadRoom() ; navigate('/play')}}>Leave</button>
                 </div>)}
             </>)
-            : (<p>Loading Match...</p>)}
+            : (<p className={styles.texto}>Loading Match...</p>)}
         </div>
     )
 }
